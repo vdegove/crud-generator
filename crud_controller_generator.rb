@@ -1,7 +1,12 @@
 puts "What is the name of your model? (lowcase plz)"
 print "> "
-
 model = gets.chomp()
+
+puts "What are the fields you want your users to edit?
+Write them in symbols with comas like ':name, :address, :rating'"
+print "> "
+authorized_fields = gets.chomp()
+
 
 Models = model.capitalize + "s"
 Model = model.capitalize
@@ -43,7 +48,7 @@ template = "class #{Models}Controller < ApplicationController
   private
 
   def #{model}_params
-    params.require(:#{model}).permit(:name, :address, :rating)
+    params.require(:#{model}).permit(#{authorized_fields})
   end
 
   def set_#{model}
@@ -51,7 +56,10 @@ template = "class #{Models}Controller < ApplicationController
   end
 end"
 
-puts "Copy this in app/controllers/#{models}_controller.rb"
+puts "1. Add `ressources :#{models}, only: [:index, :new, :create, :show, :edit, :update, :detroy]`
+in your routes.rb file (just delete the actions you won't use)"
+puts "2. Copy this in app/controllers/#{models}_controller.rb"
 puts "#####"
 puts template
 puts "#####"
+
