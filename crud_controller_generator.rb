@@ -7,17 +7,18 @@ Write them in symbols with comas like ':name, :address, :rating'"
 print "> "
 authorized_fields = gets.chomp()
 
+first_field = authorized_fields.split(",")[0][1..-1]
 
 Models = model.capitalize + "s"
 Model = model.capitalize
 models = model + "s"
 
 
-template = "class #{Models}Controller < ApplicationController
+controller_template = "class #{Models}Controller < ApplicationController
   before_action :set_#{model}, only: [:show, :edit, :update, :destroy]
 
   def index
-    @#{models} = {#Model}.all
+    @#{models} = #{Model}.all
   end
 
   def show
@@ -56,10 +57,50 @@ template = "class #{Models}Controller < ApplicationController
   end
 end"
 
+
+index_template = "<h1>#{Models}</h1>
+
+<ul>
+
+<% @#{models}.each do |#{model}| %>
+
+<li><%= link_to(#{model}.#{first_field}, #{model}_path(#{model})) %></li>
+
+<% end %>
+
+</ul>
+
+<%= link_to 'Add a new #{model}', new_#{model}_path %>"
+
+new_template = "<h1>Add a new #{model}</h1>
+
+<%= simple_form_for @#{model} do |f| %>
+<%= f.input :#{first_field} %>
+<%= f.submit %>
+<% end %>"
+
+show_template = "<h1><%= @#{model}.name %></h1>
+
+  <ul>
+    <li>#{first_field.upcase}: <%= @#{model}.#{first_field} %></li>
+  </ul>
+  <%= link_to('Back to #{model} list', #{models}_path) %>"
+
 puts "1. Add `ressources :#{models}, only: [:index, :new, :create, :show, :edit, :update, :detroy]`
 in your routes.rb file (just delete the actions you won't use)"
 puts "2. Copy this in app/controllers/#{models}_controller.rb"
 puts "#####"
-puts template
+puts controller_template
 puts "#####"
-
+puts "3. Copy this in app/views/#{models}/index.html.erb"
+puts "#####"
+puts index_template
+puts "#####"
+puts "4. Copy this in app/views/#{models}/show.html.erb"
+puts "#####"
+puts show_template
+puts "#####"
+puts "4. Copy this in app/views/#{models}/new.html.erb"
+puts "#####"
+puts new_template
+puts "#####"
