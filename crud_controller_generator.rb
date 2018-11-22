@@ -73,8 +73,14 @@ index_template = "<h1>#{Models}</h1>
 <%= link_to 'Add a new #{model}', new_#{model}_path %>"
 
 new_template = "<h1>Add a new #{model}</h1>
+<%= render 'form', #{model}: @#{model} %>
+"
 
-<%= simple_form_for @#{model} do |f| %>
+edit_template = "<h1>Edit <%= @#{model}.#{first_field} %></h1>
+<%= render 'form', #{model}: @#{model} %>
+"
+
+form_template = "<%= simple_form_for @#{model} do |f| %>
 <%= f.input :#{first_field} %>
 <%= f.submit %>
 <% end %>"
@@ -82,11 +88,15 @@ new_template = "<h1>Add a new #{model}</h1>
 show_template = "<h1><%= @#{model}.name %></h1>
 
   <ul>
-    <li>#{first_field.upcase}: <%= @#{model}.#{first_field} %></li>
+    <li>#{first_field.capitalize}: <%= @#{model}.#{first_field} %></li>
   </ul>
-  <%= link_to('Back to #{model} list', #{models}_path) %>"
+  <%= link_to('Back to #{model} list', #{models}_path) %>
+  | <%= link_to('Edit #{model}', edit_#{model}_path(@#{model})) %>
+  | <%= link_to('Remove #{model}', #{model}_path(@#{model}), method: :delete,
+      data: { confirm: 'Are you sure?' }) %>
+  "
 
-puts "1. Add `ressources :#{models}, only: [:index, :new, :create, :show, :edit, :update, :detroy]`
+puts "1. Add `resources :#{models}, only: [:index, :new, :create, :show, :edit, :update, :destroy]`
 in your routes.rb file (just delete the actions you won't use)"
 puts "2. Copy this in app/controllers/#{models}_controller.rb"
 puts "#####"
@@ -104,3 +114,12 @@ puts "4. Copy this in app/views/#{models}/new.html.erb"
 puts "#####"
 puts new_template
 puts "#####"
+puts "5. Copy this in app/views/#{models}/edit.html.erb"
+puts "#####"
+puts edit_template
+puts "#####"
+puts "6. Copy this in app/views/#{models}/_form.html.erb"
+puts "#####"
+puts form_template
+puts "#####"
+
