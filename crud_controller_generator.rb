@@ -37,6 +37,7 @@ controller_template = "class #{Models}Controller < ApplicationController
   end
 
   def update
+    @#{model} = #{Model}.find(params[:id])
     @#{model}.update(#{model}_params)
     redirect_to #{model}_path(@#{model})
   end
